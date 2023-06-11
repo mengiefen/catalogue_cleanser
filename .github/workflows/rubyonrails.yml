@@ -38,7 +38,7 @@ jobs:
         run: bin/rails db:schema:load
       # Add or replace test runners here
       - name: Run tests and upload code coverage
-        uses: mengiefen/codeclimate@V3.0.0
+        uses: paambaati/codeclimate-action@v3.0.0
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
 
