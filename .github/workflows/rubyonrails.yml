@@ -41,6 +41,16 @@ jobs:
         uses: paambaati/codeclimate-action@v3.0.0
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        with:
+          coverageCommand: bin/rails test:all
+          debug: true
+      - name: Upload test failures
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: Test Failures
+          path: /home/runner/work/catalogue_cleanser/catalogue_cleanser/tmp/screenshots
+          retention-days: 5
 
   lint:
     runs-on: ubuntu-latest
