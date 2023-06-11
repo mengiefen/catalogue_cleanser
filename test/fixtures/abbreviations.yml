@@ -2,8 +2,8 @@
 
 one:
   letters: MyString
-  DictionaryEntry: one
+  dictionary_entry_id: 1
 
 two:
   letters: MyString
-  DictionaryEntry: two
+  dictionary_entry_id: 2

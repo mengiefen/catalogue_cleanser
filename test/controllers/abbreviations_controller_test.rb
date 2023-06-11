@@ -22,7 +22,7 @@ class AbbreviationsControllerTest < ActionDispatch::IntegrationTest
       post abbreviations_url,
            params: {
              abbreviation: {
-               DictionaryEntry_id: @abbreviation.DictionaryEntry_id,
+               dictionary_entry: @abbreviation.DictionaryEntry_id,
                letters: @abbreviation.letters
              }
            }
@@ -45,7 +45,7 @@ class AbbreviationsControllerTest < ActionDispatch::IntegrationTest
     patch abbreviation_url(@abbreviation),
           params: {
             abbreviation: {
-              DictionaryEntry_id: @abbreviation.DictionaryEntry_id,
+              dictionary_entry_id: @abbreviation.dictionary_entry_id,
               letters: @abbreviation.letters
             }
           }
