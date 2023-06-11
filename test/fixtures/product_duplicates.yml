@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  canonical_product_id: 1
+  action: MyString
+  certainity_percentage: 9.99
+  mapped_product_id: 1
+  levenshtein_distance: 9.99
+  simliarity_score: 9.99
+  product: one
+
+two:
+  canonical_product_id: 1
+  action: MyString
+  certainity_percentage: 9.99
+  mapped_product_id: 1
+  levenshtein_distance: 9.99
+  simliarity_score: 9.99
+  product: two

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
@@ -63,9 +65,12 @@ end
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
-  gem 'web-console'
-  gem "sorbet"
+  gem 'sorbet'
   gem 'sorbet-runtime'
+  gem 'web-console'
+
+  # process manager
+  gem 'foreman'
 
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   # gem "rack-mini-profiler"
@@ -81,3 +86,5 @@ group :test do
   gem 'simplecov', require: false
   gem 'webdrivers'
 end
+
+gem 'devise'
