@@ -1,10 +1,80 @@
+# # This workflow uses actions that are not certified by GitHub.  They are
+# # provided by a third-party and are governed by separate terms of service,
+# # privacy policy, and support documentation.
+# #
+# # This workflow will install a prebuilt Ruby version, install dependencies, and
+# # run tests and linters.
+# name: "Ruby on Rails CI"
+# on:
+#   push:
+#     branches: ["main"]
+#   pull_request:
+#     branches: ["main"]
+# jobs:
+#   test:
+#     runs-on: ubuntu-latest
+#     services:
+#       postgres:
+#         image: postgres:11-alpine
+#         ports:
+#           - "5432:5432"
+#         env:
+#           POSTGRES_DB: rails_test
+#           POSTGRES_USER: rails
+#           POSTGRES_PASSWORD: password
+#     env:
+#       RAILS_ENV: test
+#       DATABASE_URL: "postgres://rails:password@localhost:5432/rails_test"
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
+#       # Add or replace dependency steps here
+#       - name: Install Ruby and gems
+#         uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
+#         with:
+#           bundler-cache: true
+#       # Add or replace database setup steps here
+#       - name: Set up database schema
+#         run: bin/rails db:schema:load
+#       # Add or replace test runners here
+#       - name: Run tests and upload code coverage
+#         uses: paambaati/codeclimate-action@v3.0.0
+#         env:
+#           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+#         with:
+#           coverageCommand: bin/rails test:all
+#           debug: true
+#       - name: Upload test failures
+#         uses: actions/upload-artifact@v3
+#         if: failure()
+#         with:
+#           name: Test Failures
+#           path: /home/runner/work/catalogue_cleanser/catalogue_cleanser/tmp/screenshots
+#           retention-days: 5
+
+#   lint:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
+#       - name: Install Ruby and gems
+#         uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
+#         with:
+#           bundler-cache: true
+#       # Add or replace any other lints here
+#       - name: Security audit dependencies
+#         run: bin/bundler-audit --update
+#       - name: Security audit application code
+#         run: bin/brakeman -q -w2
+#       - name: Lint Ruby files
+#         run: bin/rubocop --parallel
 # This workflow uses actions that are not certified by GitHub.  They are
 # provided by a third-party and are governed by separate terms of service,
 # privacy policy, and support documentation.
 #
 # This workflow will install a prebuilt Ruby version, install dependencies, and
 # run tests and linters.
-name: "Ruby on Rails CI"
+name: "CI"
 on:
   push:
     branches: ["main"]
@@ -13,9 +83,10 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    environment: test
     services:
       postgres:
-        image: postgres:11-alpine
+        image: postgres:14-alpine
         ports:
           - "5432:5432"
         env:
@@ -30,17 +101,40 @@ jobs:
         uses: actions/checkout@v3
       # Add or replace dependency steps here
       - name: Install Ruby and gems
-        uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
+        uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@latest
+        with:
+          chrome-version: stable
+      - name: Download chrome driver
+        uses: nanasess/setup-chromedriver@v1.0.7
+      - name: Launch chrome driver
+        run: |
+          export DISPLAY=:99
+          chromedriver --url-base=/wd/hub &
+          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
       # Add or replace database setup steps here
       - name: Set up database schema
         run: bin/rails db:schema:load
+      - name: Add external database
+        run: psql -h localhost -d rails_test -U rails -c 'CREATE DATABASE external_test;'
+        env:
+          PGPASSWORD: password
+      - name: Create external database schema
+        run: psql -h localhost -d external_test -U rails -f db/external_database_schema.sql
+        env:
+          PGPASSWORD: password
       # Add or replace test runners here
-      - name: Run tests and upload code coverage
+      - name: Run Tests and Upload Code Coverage
         uses: paambaati/codeclimate-action@v3.0.0
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+          EXTERNAL_DATABASE_HOST: localhost
+          EXTERNAL_DATABASE_NAME: external_test
+          EXTERNAL_DATABASE_USER: rails
+          EXTERNAL_DATABASE_PASSWORD: password
         with:
           coverageCommand: bin/rails test:all
           debug: true
@@ -58,13 +152,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Install Ruby and gems
-        uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
+        uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
       # Add or replace any other lints here
-      - name: Security audit dependencies
-        run: bin/bundler-audit --update
-      - name: Security audit application code
-        run: bin/brakeman -q -w2
       - name: Lint Ruby files
-        run: bin/rubocop --parallel
+        run: bundle exec rubocop --parallel

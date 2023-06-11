@@ -3,6 +3,7 @@
 [![Ruby Style Guide](https://img.shields.io/badge/code_style-rubocop-brightgreen.svg)](https://github.com/rubocop/rubocop)
 [![Ruby Style Guide](https://img.shields.io/badge/code_style-community-brightgreen.svg)](https://rubystyle.guide)
 [![Known Vulnerabilities](https://snyk.io/test/github/andrewfoster73/catalogue_cleanser/badge.svg)](https://snyk.io/test/github/andrewfoster73/catalogue_cleanser)
+![GitHub Workflow](https://github.com/andrewfoster73/catalogue_cleanser/actions/workflows/rubyonrails.yml/badge.svg)
 
 This README would normally document whatever steps are necessary to get the
 application up and running.
