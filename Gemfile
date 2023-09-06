@@ -67,7 +67,7 @@ group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem 'sorbet'
   gem 'sorbet-runtime'
-  gem 'web-console'
+  gem 'web-console', '>= 4.2.1'
 
   # process manager
   gem 'foreman'
