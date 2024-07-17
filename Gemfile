@@ -58,9 +58,9 @@ gem 'bootsnap', require: false
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem 'debug', platforms: %i[mri mingw x64_mingw]
-  gem 'rubocop', require: false
-  gem 'rubocop-performance', require: false
-  gem 'rubocop-rails', require: false
+  gem 'rubocop', '>= 1.52.1', require: false
+  gem 'rubocop-performance', '>= 1.19.0', require: false
+  gem 'rubocop-rails', '>= 2.20.0', require: false
 end
 
 group :development do
@@ -82,9 +82,9 @@ end
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem 'capybara'
-  gem 'selenium-webdriver'
+  gem 'selenium-webdriver', '>= 4.11.0'
   gem 'simplecov', require: false
-  gem 'webdrivers'
+  gem 'webdrivers', '>= 5.3.0'
 end
 
 gem 'devise'
